@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "baseUrl": "src",
+    "outDir": "dist",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "typeRoots": ["node_modules/@types", "./types"],
+  "include": [
+    "./**/*",
+    "src/**/*",
+    "./types/**/*.{ts,d.ts}" // Include both .ts and .d.ts files
+  ]
+}
