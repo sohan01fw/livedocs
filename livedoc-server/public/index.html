@@ -1,15 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <h1>hey</h1>
+  </head>
+  <body>
+    <form id="form" onsubmit="sendMsg(event)">
+      <input type="text" id="input" />
+      <button type="submit">Send Message</button>
+    </form>
+    <ul id="message"></ul>
+
     <script src="/socket.io/socket.io.js"></script>
-    <script >
-        const socket = io()
+    <script>
+      const socket = io();
+      const msgValue = document.getElementById("message");
+      const sendMsg = (e) => {
+        e.preventDefault(); // Prevent the default form submission
+
+        const inputValue = document.getElementById("input").value; // Get the input value here
+        inputValue && socket.emit("msg", inputValue);
+
+        document.getElementById("input").value = ""; // Clear the input after sending
+      };
+
+      socket.on("msg", (msg) => {
+        const createList = document.createElement("li");
+        createList.textContent = msg;
+        msgValue.appendChild(createList);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
     </script>
-</body>
+  </body>
 </html>
