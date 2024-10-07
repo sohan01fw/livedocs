@@ -1,15 +1,33 @@
-import fastify from 'fastify'
+import express from "express";
+import { createServer } from "node:http";
+import { fileURLToPath } from "node:url";
+import path, { dirname, join } from "node:path";
+import { Server } from "socket.io";
+import { PrismaClient } from "@prisma/client";
 
-const server = fastify()
+const prisma = new PrismaClient();
+const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
-server.get('/ping', async (request, reply) => {
-  return 'pong\n'
-})
+const __dirname = dirname(path.resolve("public/index.html"));
 
-server.listen({ port: 8080 }, (err, address) => {
-  if (err) {
-    console.error(err)
-    process.exit(1)
-  }
-  console.log(`Server listening at ${address}`)
-})
+app.get("/", (req, res) => {
+  res.sendFile(join(__dirname, "index.html"));
+});
+app.post("/user", async (req, res) => {
+  const x = await prisma.user.create({
+    data: {
+      email: "sohan@gmail.com",
+      name: "sohan",
+    },
+  });
+  res.send(x);
+});
+io.on("connection", (socket) => {
+  console.log("a user connected");
+});
+
+server.listen(8080, () => {
+  console.log("server running at http://localhost:8080");
+});
