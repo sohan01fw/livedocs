@@ -16,7 +16,7 @@ const io = new Server(server,{
 
  io.on("connection", (socket) => {
   socket.on('msg',(msg)=>{
-    socket.emit('msg',msg);
+    io.emit('msg',msg);
   })
 
 }) 
