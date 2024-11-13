@@ -26,7 +26,7 @@ app.use((err, req, res, next) => {
   res.status(401).send("Unauthenticated!");
 });
 
-io.use(async (socket, next) => {
+/* io.use(async (socket, next) => {
   try {
     const token = socket.handshake.auth.token;
     if (!token) {
@@ -37,10 +37,13 @@ io.use(async (socket, next) => {
   } catch (error) {
     next(new Error("Authentication error: " + error.message));
   }
-});
+}); */
 //Defining socket server
 io.on("connection", (socket) => {
-  socket.on("roomId", (id) => {
+  socket.on("msg",(delta)=>{
+    socket.broadcast.emit("receive-msg",delta);
+  })
+  /* socket.on("roomId", (id) => {
     socket.join(id);
     console.log(`Client joined room: ${id}`);
   });
@@ -49,7 +52,7 @@ io.on("connection", (socket) => {
     const { text, roomId } = msg;
 
     io.to(roomId).emit("msg", text);
-  });
+  }); */
 });
 
 server.listen(8080, () => {
