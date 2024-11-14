@@ -26,9 +26,10 @@ app.use((err, req, res, next) => {
   res.status(401).send("Unauthenticated!");
 });
 
-/* io.use(async (socket, next) => {
+io.use(async (socket, next) => {
   try {
     const token = socket.handshake.auth.token;
+    console.log("auth-token",token);
     if (!token) {
       const err = new Error("not authorized!");
       next(err);
@@ -37,13 +38,13 @@ app.use((err, req, res, next) => {
   } catch (error) {
     next(new Error("Authentication error: " + error.message));
   }
-}); */
+});
 //Defining socket server
-io.on("connection", (socket) => {
+/* io.on("connection", (socket) => {
   socket.on("msg",(delta)=>{
     socket.broadcast.emit("receive-msg",delta);
   })
-  /* socket.on("roomId", (id) => {
+  socket.on("roomId", (id) => {
     socket.join(id);
     console.log(`Client joined room: ${id}`);
   });
@@ -52,8 +53,8 @@ io.on("connection", (socket) => {
     const { text, roomId } = msg;
 
     io.to(roomId).emit("msg", text);
-  }); */
-});
+  });
+}); */
 
 server.listen(8080, () => {
   console.log("server running at http://localhost:8080");

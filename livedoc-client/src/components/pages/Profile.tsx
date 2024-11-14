@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 function Profile() {
 
-    const {user, isSignedIn, isLoaded} = useUser();
+    const {isSignedIn, isLoaded} = useUser();
 
     if(!isLoaded){
         return <div>loading...</div>
@@ -11,8 +11,7 @@ function Profile() {
     if(!isSignedIn){
         return <Navigate to="/login" />
     }
-    console.log(user);
-  return (
+   return (
     <div>profile</div>
   )
 }

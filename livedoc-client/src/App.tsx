@@ -1,7 +1,6 @@
 
 import IndexRoute from "./routes";
 const App = () => {
-
   return <><IndexRoute /></>
   
 };

@@ -10,13 +10,13 @@ export default function IndexRoute() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<DocDashboard />} />
-        <Route path={`/document/:id`} element={<NewTextEditor />} />
         <Route path="/login" element={<Login />} />
         <Route element={<Protected />}>
+          <Route path="/" element={<DocDashboard />} />
+          <Route path="document/:id" element={<NewTextEditor />} />
           <Route path="/editdocs" element={<Docedits />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
-        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

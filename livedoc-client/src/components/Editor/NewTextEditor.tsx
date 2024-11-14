@@ -2,13 +2,21 @@ import { useCallback, useEffect, useState } from "react";
 import "quill/dist/quill.snow.css";
 import Quill from "quill";
 import { io, Socket } from "socket.io-client";
+import { useAuth } from "@clerk/clerk-react";
 const NewTextEditor = () => {
   const [socket, setSocket] = useState<Socket>();
   const [quill, setquill] = useState<Quill>();
+  const { sessionId } = useAuth();
+
   useEffect(() => {
-    const ss = io("http://localhost:8080");
+    const ss = io("http://localhost:8080", {
+      auth: {
+        token: sessionId,
+      },
+    });
 
     setSocket(ss);
+
     return () => {
       if (socket) {
         socket.disconnect();
@@ -17,6 +25,13 @@ const NewTextEditor = () => {
   }, []);
 
   useEffect(() => {
+    setInterval(() => {
+      const content = quill?.getContents();
+      console.log(content);
+    }, 3000);
+  }, [quill, socket]);
+
+  /* useEffect(() => {
     if (socket == null || quill == null) return;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-expect-error
@@ -24,12 +39,12 @@ const NewTextEditor = () => {
       quill.updateContents(delta);
     };
 
-    socket.on("receive-msg",handler)
+    socket.on("receive-msg", handler);
     return () => {
       socket.off("receive-msg", handler);
     };
-  }, [quill, socket]);
-  useEffect(() => {
+  }, [quill, socket]); */
+  /*   useEffect(() => {
     if (socket == null || quill == null) return;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-expect-error
@@ -42,7 +57,7 @@ const NewTextEditor = () => {
     return () => {
       quill?.off("text-change", handler);
     };
-  }, [quill, socket]);
+  }, [quill, socket]); */
   const editorRef = useCallback((wrapper: HTMLDivElement) => {
     if (wrapper === null) return;
     wrapper.innerHTML = "";
