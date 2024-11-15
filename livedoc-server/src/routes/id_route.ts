@@ -5,4 +5,4 @@ import express from "express";
 export const idRouter = express.Router();
 
 
-idRouter.get("/docId",ClerkExpressRequireAuth(),DocIdController)
+idRouter.post("/docId",ClerkExpressRequireAuth(),DocIdController)

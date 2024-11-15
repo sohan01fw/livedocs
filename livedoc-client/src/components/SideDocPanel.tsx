@@ -1,10 +1,24 @@
 import { useAuth } from "@clerk/clerk-react";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+interface User{
+  userId: string
+}
+interface Doc extends User {
+  title: string;
+}
 export const SideDocPanel = () => {
-  const { isSignedIn, getToken } = useAuth();
+  const {userId, isSignedIn, getToken } = useAuth();
+
+  const [docTitle] = useState("");
   const navigate = useNavigate();
+
+  const docData: Doc = {
+    userId: userId ?? "",
+    title: docTitle || "new doc",
+  };
   const handleDoc = async () => {
     if (!isSignedIn) {
       navigate(`/login`);
@@ -12,16 +26,21 @@ export const SideDocPanel = () => {
     const token = await getToken();
 
     try {
-      const response = await axios.get("/docId", {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        "/docId",
+        {
+          data: docData,
         },
-      });
-      
-      // Now navigate to the profile page
-      
-       navigate(`/document/${response.data.docId}`);
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      // Now navigate to the profile page
+
+     navigate(`/document/${response.data.data.id}`);
     } catch (error) {
       console.error("Error fetching document ID:", error);
       // Handle error appropriately (e.g., show a message to the user)
