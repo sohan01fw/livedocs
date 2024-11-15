@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import "quill/dist/quill.snow.css";
 import Quill from "quill";
 import { io, Socket } from "socket.io-client";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth} from "@clerk/clerk-react";
 const NewTextEditor = () => {
   const [socket, setSocket] = useState<Socket>();
   const [quill, setquill] = useState<Quill>();
@@ -27,7 +27,9 @@ const NewTextEditor = () => {
   useEffect(() => {
     setInterval(() => {
       const content = quill?.getContents();
-      console.log(content);
+      if(content){
+        socket?.emit("db-data",content.toString())
+      }
     }, 3000);
   }, [quill, socket]);
 
