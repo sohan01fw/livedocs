@@ -8,6 +8,7 @@ type User = {
   user_id: string;
   imageUrl?: string;
   isLoggedIn: boolean;
+  fullname: string;
 };
 type UserLogout = {
   name: string;
@@ -22,6 +23,7 @@ const Navbar = () => {
     const userData: User = {
       email: user?.primaryEmailAddress?.emailAddress ?? "",
       name: user?.firstName ?? "",
+      fullname: user?.fullName ?? "",
       user_id: user?.id ?? "",
       imageUrl: user?.imageUrl,
       isLoggedIn: isSignedIn ?? true,
@@ -51,14 +53,24 @@ const Navbar = () => {
   }, [user]);
 
   const handleLogout = async () => {
+    const token = await getToken();
     const logoutData: UserLogout = {
       email: user?.primaryEmailAddress?.emailAddress ?? "",
       name: user?.firstName ?? "",
       isLoggedIn: false,
     };
-    await axios("/logout-user", {
-      data: logoutData,
-    });
+    await axios.post(
+      "/logout-user",
+      {
+        Credential: true,
+        data: logoutData,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     signOut({ redirectUrl: "/" });
   };
 

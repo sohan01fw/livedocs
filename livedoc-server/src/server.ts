@@ -6,10 +6,9 @@ import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
 import { idRouter } from "../src/routes/id_route";
 import { userRouter } from "../src/routes/user_route";
-import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 export const uuid = uuidv4();
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 const server = createServer(app);
