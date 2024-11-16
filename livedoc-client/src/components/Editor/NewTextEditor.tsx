@@ -23,13 +23,12 @@ const NewTextEditor = () => {
     return () => {
       if (socket) {
         socket.disconnect();
-        setSocket(undefined)
+        setSocket(undefined);
       }
     };
   }, [sessionId]);
 
   useEffect(() => {
-    
     const handleError = (err) => {
       console.log(err);
     };
@@ -72,25 +71,27 @@ const NewTextEditor = () => {
 
   useEffect(() => {
     if (!quill || !socket || !id) return;
-  
-    const debouncedEmit = debounce((content) => {
+
+    // Debounced function to send the entire editor content
+    const sendContent = debounce(() => {
+      const content = quill.getContents(); // Fetch the current full content
       const data = {
         docId: id,
-        content: content.ops,
+        content: content.ops, // Send only the final content
       };
-      socket?.emit("save-doc", data);
-    }, 2000);
-  
+      socket.emit("save-doc", data);
+    }, 2000); // 2-second delay after inactivity
+
+    // Listener for text changes
     const handleContentChange = () => {
-      const content = quill?.getContents();
-      debouncedEmit(content);
+      sendContent(); // Call the debounced function on every text change
     };
-  
-    quill.on('text-change', handleContentChange);
-  
+    quill.off("text-change", handleContentChange);
+    quill.on("text-change", handleContentChange);
+
     return () => {
-      quill.off('text-change', handleContentChange);
-      debouncedEmit.cancel();
+      quill.off("text-change", handleContentChange);
+      sendContent.cancel(); // Clean up the debounced function
     };
   }, [id, quill, socket]);
 

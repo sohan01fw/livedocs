@@ -88,27 +88,24 @@ io.on("connection", (socket) => {
 
     socket.on("doc-text", (delta) => {
       socket.broadcast.emit("receive-text", delta);
-
-      socket.on("save-doc", async (data:docDataDb) => {
-        try {
-          const updateDoc = await prisma.doc.update({
-            where: {
-              id: data.docId,
-            },
-            data: {
-              content: data.content,
-            },
-          });
-        } catch (error) {
-          console.log(error);
-          socket.emit(error);
-        }
-      });
     });
 
+    socket.on("save-doc", async (data: docDataDb) => {
+      try {
+        const updateDoc = await prisma.doc.update({
+          where: {
+            id: data.docId,
+          },
+          data: {
+            content: data.content,
+          },
+        });
+      } catch (error) {
+        console.log(error);
+        socket.emit(error);
+      }
+    });
   });
-
-  
 });
 
 server.listen(8080, () => {

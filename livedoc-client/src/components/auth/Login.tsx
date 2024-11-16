@@ -3,7 +3,9 @@ import { SignIn } from "@clerk/clerk-react"
 function Login() {
 
   return (
-    <SignIn fallbackRedirectUrl={"/dashboard"} />
+    <div className="flex justify-center mt-10">
+    <SignIn fallbackRedirectUrl={"/dashboard"}  />
+    </div>
   )
 }
 

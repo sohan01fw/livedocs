@@ -32,6 +32,21 @@ export async function UserController(
       },
     });
     if (findUser) {
+      //update user login status
+      try {
+       await prisma.user.update({
+        where:{
+          id:findUser.id
+        },
+        data:{
+          isLoggedIn:uData.isLoggedIn
+        }
+      }) 
+      } catch (error) {
+       res.status(400).json({msg:'failed to update isLoggedIn status of user'}) 
+       return;
+      }
+      
       res.status(200).json({ msg: "user already existed" });
       return;
     }
