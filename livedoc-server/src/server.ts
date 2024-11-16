@@ -50,25 +50,66 @@ io.use(async (socket, next) => {
   }
 });
 //Defining socket server
+interface docDataDb {
+  docId: string;
+  content: object;
+}
+interface fetchData {
+  docId: string;
+}
+interface getData {
+  docId: string;
+  userId: string;
+}
+const findDoc = async (docId: string) => {
+  try {
+    const doc = await prisma.doc.findUnique({
+      where: {
+        id: docId,
+      },
+    });
+    return doc;
+  } catch (error) {
+    return error;
+  }
+};
 
- io.on("connection", (socket) => {
-  socket.on("db-data",(data)=>{
-    
-  })
-  /* socket.on("msg",(delta)=>{
-    socket.broadcast.emit("receive-msg",delta);
-  })
-  socket.on("roomId", (id) => {
-    socket.join(id);
-    console.log(`Client joined room: ${id}`);
+io.on("connection", (socket) => {
+  socket.on("get-doc", async (data: getData) => {
+    const getDoc = await findDoc(data.docId);
+    if (!getDoc) {
+      socket.broadcast.emit("error", "doc not found!");
+    }
+    socket.join(data.userId);
+
+    //console.log(`Client joined room: ${data.userId}`);
+
+    socket.emit("load-data", getDoc.content);
+
+    socket.on("doc-text", (delta) => {
+      socket.broadcast.emit("receive-text", delta);
+
+      socket.on("save-doc", async (data:docDataDb) => {
+        try {
+          const updateDoc = await prisma.doc.update({
+            where: {
+              id: data.docId,
+            },
+            data: {
+              content: data.content,
+            },
+          });
+        } catch (error) {
+          console.log(error);
+          socket.emit(error);
+        }
+      });
+    });
+
   });
 
-  socket.on("msg", (msg) => {
-    const { text, roomId } = msg;
-
-    io.to(roomId).emit("msg", text);
-  }); */
-}); 
+  
+});
 
 server.listen(8080, () => {
   console.log("server running at http://localhost:8080");
