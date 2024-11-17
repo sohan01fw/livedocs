@@ -30,7 +30,7 @@ const NewTextEditor = () => {
   }, [sessionId]);
 
   useEffect(() => {
-    const handleError = (err) => {
+    const handleError = (err:Error) => {
       console.log(err);
     };
 
