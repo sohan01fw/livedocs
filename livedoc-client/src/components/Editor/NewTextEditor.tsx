@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { Link, useParams } from "react-router-dom";
 import { debounce } from "lodash";
+import { URL } from "../../lib/socket";
 const NewTextEditor = () => {
   const [socket, setSocket] = useState<Socket>();
   const [quill, setquill] = useState<Quill>();
@@ -14,7 +15,7 @@ const NewTextEditor = () => {
  
 
   useEffect(() => {
-    const ss = io("http://localhost:8080", {
+    const ss = io(URL, {
       auth: {
         token: sessionId,
       },
