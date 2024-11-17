@@ -3,7 +3,7 @@ import "quill/dist/quill.snow.css";
 import Quill from "quill";
 import { io, Socket } from "socket.io-client";
 import { useAuth, useUser } from "@clerk/clerk-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { debounce } from "lodash";
 const NewTextEditor = () => {
   const [socket, setSocket] = useState<Socket>();
@@ -11,6 +11,7 @@ const NewTextEditor = () => {
   const { sessionId } = useAuth();
   const { user } = useUser();
   const { id } = useParams();
+ 
 
   useEffect(() => {
     const ss = io("http://localhost:8080", {
@@ -131,7 +132,13 @@ const NewTextEditor = () => {
     setquill(Q);
   }, []);
 
-  return <div id="container" ref={editorRef}></div>;
+  return  <>
+    <Link to={"/dashboard"} className="cursor-pointer" >
+        <h2 className=" m-2 bg-gradient-to-r from-cyan-500 to-blue-500 inline-block text-transparent bg-clip-text text-2xl font-semibold">
+          LiveDocs
+        </h2>
+      </Link> 
+  <div id="container" ref={editorRef}></div></>;
 };
 
 export default NewTextEditor;

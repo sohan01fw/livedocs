@@ -15,7 +15,7 @@ export default function IndexRoute() {
         <Route path="/" element={<Home />} />
           <Route element={<Protected />}>
           <Route path="/dashboard" element={<DocDashboard />} />
-          <Route path="document/:id" element={<NewTextEditor />} />
+          <Route path="/document/:id" element={<NewTextEditor />} />
           <Route path="/editdocs" element={<Docedits />} />
           <Route path="/profile" element={<Profile />} />
         </Route>

@@ -43,3 +43,35 @@ export async function DocIdController(
     });
   }
 }
+
+
+
+export async function GetDocs(req:Request,res:Response) {
+ try {
+    const getDocs = await prisma.doc.findMany();
+    res.status(200).json({data:getDocs,msg:"successfully retirve docs"})
+
+ } catch (error) {
+  console.log(error);
+ res.status(500).json({msg:"failed to get docs"}) 
+  
+}
+}
+
+export async function DeleteDocs(req:Request,res:Response) {
+ try {
+  const {data} = req.body;
+   await prisma.doc.delete({
+      where:{
+        id:data.docId
+      }
+    });
+    res.status(200).json({data:{},msg:"successfully remove doc"})
+
+ } catch (error) {
+  console.log(error);
+ res.status(500).json({msg:"failed to delete docs"}) 
+  
+}
+}
+
