@@ -27,7 +27,7 @@ app.use(
     origin: "http://localhost:5173", // Replace with your frontend origin
     credentials: true, // Allow cookies
     allowedHeaders: ["Authorization", "Content-Type"],
-  })
+  }),
 );
 app.use(userRouter);
 app.use(idRouter);

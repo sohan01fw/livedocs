@@ -7,7 +7,6 @@
     "dev": "nodemon src/server.ts"
   },
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^5.0.52",
     "@prisma/client": "^5.20.0",
     "automerge": "^2.0.0-alpha.3",
     "cors": "^2.8.5",

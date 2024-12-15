@@ -13,7 +13,7 @@ export default function IndexRoute() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
-          <Route element={<Protected />}>
+        <Route element={<Protected />}>
           <Route path="/dashboard" element={<DocDashboard />} />
           <Route path="/document/:id" element={<NewTextEditor />} />
           <Route path="/editdocs" element={<Docedits />} />

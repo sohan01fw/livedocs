@@ -42,7 +42,7 @@ const Navbar = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
       } catch (error) {
         console.log(error);
@@ -69,7 +69,7 @@ const Navbar = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }
+      },
     );
     signOut({ redirectUrl: "/" });
   };
