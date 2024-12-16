@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { prisma, uuid } from "../server";
 interface Doc {
-  userId: string;
+  user_id: string;
   title: string;
   content: object;
 }
@@ -18,7 +18,7 @@ export async function DocIdController(
     const docData: Doc = data;
     const findUser = await prisma.user.findUnique({
       where: {
-        id: docData?.userId,
+        id: docData?.user_id,
       },
     });
     if (!findUser) {
@@ -46,7 +46,17 @@ export async function DocIdController(
 
 export async function GetDocs(req: Request, res: Response) {
   try {
-    const getDocs = await prisma.doc.findMany();
+    const { data } = req.body;
+    if (!data || typeof data !== "object") {
+      res.status(400).json({ msg: "data format not valid" });
+      return;
+    }
+    const docData: Doc = data;
+    const getDocs = await prisma.doc.findMany({
+      where: {
+        userId: docData.user_id,
+      },
+    });
     res.status(200).json({ data: getDocs, msg: "successfully retirve docs" });
   } catch (error) {
     console.log(error);

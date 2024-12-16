@@ -8,5 +8,5 @@ import express from "express";
 export const idRouter = express.Router();
 
 idRouter.post("/docId", DocIdController);
-idRouter.get("/get-docs", GetDocs);
+idRouter.post("/get-docs", GetDocs);
 idRouter.post("/del-docs", DeleteDocs);

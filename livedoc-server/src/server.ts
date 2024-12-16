@@ -14,7 +14,7 @@ app.use(express.json());
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "http://192.168.100.61:5173"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,
@@ -23,7 +23,7 @@ const io = new Server(server, {
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Replace with your frontend origin
+    origin: ["http://localhost:5173", "http://192.168.100.61:5173"], // Replace with your frontend origin
     credentials: true, // Allow cookies
     allowedHeaders: ["Authorization", "Content-Type"],
   }),
@@ -52,6 +52,8 @@ io.use(async (socket, next) => {
 interface docDataDb {
   docId: string;
   content: object;
+  timestamp: number;
+  clientVersion: number;
 }
 interface fetchData {
   docId: string;
@@ -83,8 +85,7 @@ io.on("connection", (socket) => {
 
     //console.log(`Client joined room: ${data.userId}`);
 
-    socket.emit("load-data", getDoc.content);
-
+    socket.emit("load-data", getDoc);
     socket.on("doc-text", (delta) => {
       socket.broadcast.emit("receive-text", delta);
     });
@@ -96,7 +97,13 @@ io.on("connection", (socket) => {
             id: data.docId,
           },
           data: {
-            content: data.content,
+            content: [
+              {
+                data: data.content,
+                timestamp: data.timestamp,
+                clientVersion: data.clientVersion,
+              },
+            ],
           },
         });
       } catch (error) {

@@ -3,20 +3,20 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface User{
-  userId: string
+interface User {
+  user_id: string;
 }
 interface Doc extends User {
   title: string;
 }
 export const SideDocPanel = () => {
-  const {userId, isSignedIn, getToken } = useAuth();
+  const { userId, isSignedIn, getToken } = useAuth();
 
   const [docTitle] = useState("");
   const navigate = useNavigate();
 
   const docData: Doc = {
-    userId: userId ?? "",
+    user_id: userId ?? "",
     title: docTitle || "new doc",
   };
   const handleDoc = async () => {
@@ -35,12 +35,12 @@ export const SideDocPanel = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       // Now navigate to the profile page
 
-     navigate(`/document/${response.data.data.id}`);
+      navigate(`/document/${response.data.data.id}`);
     } catch (error) {
       console.error("Error fetching document ID:", error);
       // Handle error appropriately (e.g., show a message to the user)
