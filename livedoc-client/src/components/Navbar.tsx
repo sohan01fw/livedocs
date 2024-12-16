@@ -22,7 +22,7 @@ const Navbar = () => {
   useEffect(() => {
     const userData: User = {
       email: user?.primaryEmailAddress?.emailAddress ?? "",
-      name: user?.firstName ?? "",
+      name: "",
       fullname: user?.fullName ?? "",
       user_id: user?.id ?? "",
       imageUrl: user?.imageUrl,

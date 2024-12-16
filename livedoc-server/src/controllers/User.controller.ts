@@ -14,6 +14,8 @@ interface ResponseData {
   data?: any;
   errmsg?: string;
 }
+
+//handle create and update user.
 export async function UserController(
   req: Request,
   res: Response,
@@ -28,43 +30,41 @@ export async function UserController(
     const uData: User = data;
     const findUser = await prisma.user.findUnique({
       where: {
-        name: uData.name,
+        id: uData.user_id,
       },
     });
-    if (findUser) {
-      //update user login status
-      try {
-        await prisma.user.update({
-          where: {
-            id: findUser.id,
-          },
-          data: {
-            isLoggedIn: uData.isLoggedIn,
-          },
-        });
-      } catch (error) {
-        res
-          .status(400)
-          .json({ msg: "failed to update isLoggedIn status of user" });
-        return;
-      }
-
-      res.status(200).json({ msg: "user already existed" });
+    if (findUser === null) {
+      const createUser = await prisma.user.create({
+        data: {
+          id: uData.user_id,
+          email: uData.email,
+          fullname: uData.fullname,
+          name: uData.name,
+          imageUrl: uData.imageUrl,
+          isLoggedIn: uData.isLoggedIn,
+        },
+      });
+      res.status(200).json({ msg: "sucessfull", data: createUser });
       return;
     }
-    const createUser = await prisma.user.create({
-      data: uData,
+    await prisma.user.update({
+      where: {
+        id: findUser.id,
+      },
+      data: {
+        isLoggedIn: uData.isLoggedIn,
+      },
     });
 
-    res.status(200).json({ msg: "sucessfull", data: createUser });
+    res.status(200).json({ msg: "user already existed" });
     return;
   } catch (error) {
-    res
-      .status(500)
-      .json({ errmsg: error, msg: "error during user initialzation" });
+    console.log(error);
+    res.status(500).json({ errmsg: error, msg: "error during user operation" });
   }
 }
 
+//handle logout
 type UserLogout = {
   name: string;
   email: string;
@@ -81,7 +81,7 @@ export async function LogoutUser(req: Request, res: Response): Promise<void> {
     const uData: UserLogout = data;
     const findUser = await prisma.user.findUnique({
       where: {
-        name: uData.name,
+        email: uData.email,
       },
     });
 
@@ -91,7 +91,7 @@ export async function LogoutUser(req: Request, res: Response): Promise<void> {
     }
     const logoutUser = await prisma.user.update({
       where: {
-        name: uData.name,
+        email: uData.email,
       },
       data: {
         isLoggedIn: uData.isLoggedIn,

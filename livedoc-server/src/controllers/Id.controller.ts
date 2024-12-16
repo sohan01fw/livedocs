@@ -7,7 +7,7 @@ interface Doc {
 }
 export async function DocIdController(
   req: Request<{}, Doc>,
-  res: Response
+  res: Response,
 ): Promise<void> {
   try {
     const { data } = req.body;
@@ -18,7 +18,7 @@ export async function DocIdController(
     const docData: Doc = data;
     const findUser = await prisma.user.findUnique({
       where: {
-        user_id: docData?.userId,
+        id: docData?.userId,
       },
     });
     if (!findUser) {
@@ -28,11 +28,11 @@ export async function DocIdController(
     const createNewDoc = await prisma.doc.create({
       data: {
         title: docData.title,
-        user:{
-          connect:{
-            id:(findUser.id)
-          }
-        }
+        user: {
+          connect: {
+            id: findUser.id,
+          },
+        },
       },
     });
     res.status(200).json({ msg: "successfully", data: createNewDoc });
@@ -44,34 +44,27 @@ export async function DocIdController(
   }
 }
 
-
-
-export async function GetDocs(req:Request,res:Response) {
- try {
+export async function GetDocs(req: Request, res: Response) {
+  try {
     const getDocs = await prisma.doc.findMany();
-    res.status(200).json({data:getDocs,msg:"successfully retirve docs"})
-
- } catch (error) {
-  console.log(error);
- res.status(500).json({msg:"failed to get docs"}) 
-  
-}
+    res.status(200).json({ data: getDocs, msg: "successfully retirve docs" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "failed to get docs" });
+  }
 }
 
-export async function DeleteDocs(req:Request,res:Response) {
- try {
-  const {data} = req.body;
-   await prisma.doc.delete({
-      where:{
-        id:data.docId
-      }
+export async function DeleteDocs(req: Request, res: Response) {
+  try {
+    const { data } = req.body;
+    await prisma.doc.delete({
+      where: {
+        id: data.docId,
+      },
     });
-    res.status(200).json({data:{},msg:"successfully remove doc"})
-
- } catch (error) {
-  console.log(error);
- res.status(500).json({msg:"failed to delete docs"}) 
-  
+    res.status(200).json({ data: {}, msg: "successfully remove doc" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "failed to delete docs" });
+  }
 }
-}
-
