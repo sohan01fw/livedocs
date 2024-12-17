@@ -13,7 +13,6 @@ const NewTextEditor = () => {
   const { sessionId } = useAuth();
   const { user } = useUser();
   const { id } = useParams();
-  const [Loading, setLoading] = useState(false);
   let version = 0;
   useEffect(() => {
     const ss = io(URL, {
