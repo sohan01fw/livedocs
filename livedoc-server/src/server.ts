@@ -4,8 +4,8 @@ import { Server } from "socket.io";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
-import { idRouter } from "../src/routes/id_route";
-import { userRouter } from "../src/routes/user_route";
+import { idRouter } from "./routes/id_route";
+import { userRouter } from "./routes/user_route";
 export const uuid = uuidv4();
 
 export const prisma = new PrismaClient();
@@ -30,6 +30,10 @@ app.use(
 );
 app.use(userRouter);
 app.use(idRouter);
+
+app.get("/", (req, res) => {
+  res.send("welcome to livedoc server");
+});
 
 //@ts-ignore
 app.use((err, req, res, next) => {
