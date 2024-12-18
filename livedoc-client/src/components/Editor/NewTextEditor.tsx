@@ -68,7 +68,7 @@ const NewTextEditor = () => {
           ops: [data?.content[0]?.data[0]],
         } as any;
         quill?.setContents(quillData);
-        //quill.enable();
+        quill.enable();
       }
     };
     socket.off("load-data", handleLoadData); // Remove any previous listener
@@ -136,8 +136,7 @@ const NewTextEditor = () => {
       if (source !== "user") return;
       socket?.emit("doc-text", data);
     };
-    quill?.disable();
-    quill?.setText("loading...");
+
     quill?.on("text-change", handler);
     return () => {
       quill?.off("text-change", handler);
@@ -150,6 +149,8 @@ const NewTextEditor = () => {
     wrapper.append(editor);
     const Q = new Quill(editor, { theme: "snow" });
     setquill(Q);
+    quill?.disable();
+    quill?.setText("loading...");
   }, []);
 
   return (
